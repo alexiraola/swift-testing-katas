@@ -6,13 +6,17 @@ import PackageDescription
 let package = Package(
     name: "KataHexagonal",
     dependencies: [
-        .package(url: "https://github.com/swiftlang/swift-testing.git", branch: "main")
+        .package(url: "https://github.com/swiftlang/swift-testing.git", branch: "main"),
+        .package(url: "https://github.com/apple/swift-crypto.git", "1.0.0"..<"4.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .executableTarget(
             name: "KataHexagonal",
+            dependencies: [
+                .product(name: "Crypto", package: "swift-crypto")
+            ],
             path: "Sources"),
         .testTarget(
             name: "KataHexagonalTests",
