@@ -9,9 +9,11 @@ import Testing
         #expect(email != nil)
     }
 
-    @Test("Does not allow creating an email for a given incorrectly formatted address")
-    func testInvalid() {
-        let email = Email.create(email: "invalid")
+    @Test(
+        "Does not allow creating an email for a given incorrectly formatted address",
+        arguments: ["invalid", "test@examplecom", "testexample.com"])
+    func testInvalid(text: String) {
+        let email = Email.create(email: text)
         #expect(email == nil)
     }
 
