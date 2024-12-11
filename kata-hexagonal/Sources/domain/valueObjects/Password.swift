@@ -6,7 +6,7 @@ enum PasswordErrorType: Error {
     case mustContainUnderscore
 }
 
-struct PasswordError: Error, Hashable {
+struct PasswordError: Error, Equatable {
     let errors: [PasswordErrorType]
 
     init(_ errors: [PasswordErrorType]) {
