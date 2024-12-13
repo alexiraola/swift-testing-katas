@@ -1,5 +1,5 @@
 enum UserRegisterError: Error, Equatable {
-    case emailError
+    case emailError(EmailError)
     case passwordError(PasswordError)
     case alreadyExists
 }
@@ -19,7 +19,7 @@ class UserRegisterService {
     func register(_ request: UserRegisterRequest) async -> Result<EquatableVoid, UserRegisterError>
     {
         guard let email = Email.create(email: request.email) else {
-            return .failure(.emailError)
+            return .failure(.emailError(.invalid))
         }
 
         if await existsUser(email: email) {
@@ -38,13 +38,18 @@ class UserRegisterService {
     }
 
     private func createUser(request: UserRegisterRequest) -> Result<User, UserRegisterError> {
-        guard let email = Email.create(email: request.email) else {
-            return .failure(.emailError)
+        let password = Password.create(fromPlaintext: request.password).mapError {
+            UserRegisterError.passwordError($0)
+        }
+        let email = Email.createResult(email: request.email).mapError {
+            UserRegisterError.emailError($0)
         }
 
-        return Password.create(fromPlaintext: request.password).map { password in
-            return User(id: UserId.generateUniqueIdentifier(), email: email, password: password)
-        }.mapError { .passwordError($0) }
+        return email.flatMap { email in
+            return password.map { password in
+                return User(id: UserId.generateUniqueIdentifier(), email: email, password: password)
+            }
+        }
     }
 
     private func existsUser(email: Email) async -> Bool {

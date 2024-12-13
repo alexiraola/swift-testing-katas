@@ -1,5 +1,9 @@
 import Foundation
 
+enum EmailError: Error {
+    case invalid
+}
+
 struct Email: Hashable {
     private let email: String
 
@@ -12,6 +16,13 @@ struct Email: Hashable {
             return Email(email: email)
         }
         return nil
+    }
+
+    static func createResult(email: String) -> Result<Email, EmailError> {
+        if isValidEmail(email: email) {
+            return .success(Email(email: email))
+        }
+        return .failure(.invalid)
     }
 
     private static func isValidEmail(email: String) -> Bool {
