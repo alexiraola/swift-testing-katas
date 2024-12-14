@@ -8,6 +8,10 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/swiftlang/swift-testing.git", branch: "main"),
         .package(url: "https://github.com/apple/swift-crypto.git", "1.0.0"..<"4.0.0"),
+        // 💧 A server-side Swift web framework.
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.99.3"),
+        // 🔵 Non-blocking, event-driven networking for Swift. Used for custom executors
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -15,9 +19,13 @@ let package = Package(
         .executableTarget(
             name: "KataHexagonal",
             dependencies: [
-                .product(name: "Crypto", package: "swift-crypto")
+                .product(name: "Crypto", package: "swift-crypto"),
+                .product(name: "Vapor", package: "vapor"),
+                .product(name: "NIOCore", package: "swift-nio"),
+                .product(name: "NIOPosix", package: "swift-nio"),
             ],
-            path: "Sources"),
+            path: "Sources",
+            swiftSettings: swiftSettings),
         .testTarget(
             name: "KataHexagonalTests",
             dependencies: [
@@ -25,5 +33,13 @@ let package = Package(
                 .product(name: "Testing", package: "swift-testing"),
             ]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )
+
+var swiftSettings: [SwiftSetting] {
+    [
+        .enableUpcomingFeature("DisableOutwardActorInference"),
+        .enableExperimentalFeature("StrictConcurrency"),
+    ]
+}

@@ -2,6 +2,11 @@ enum UserError: Error {
     case samePassword
 }
 
+struct UserDto {
+    let id: String
+    let email: String
+}
+
 class User: Equatable {
 
     private let id: UserId
@@ -36,5 +41,9 @@ class User: Equatable {
 
     static func == (lhs: User, rhs: User) -> Bool {
         return lhs.isMatchingId(rhs.id)
+    }
+
+    func toDto() -> UserDto {
+        return UserDto(id: id.toString(), email: email.toString())
     }
 }

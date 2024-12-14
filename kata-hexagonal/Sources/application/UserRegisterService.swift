@@ -9,6 +9,15 @@ struct UserRegisterRequest {
     let password: String
 }
 
+struct UserRegisterResponse {
+    let id: String
+    let email: String
+
+    static func from(dto: UserDto) -> UserRegisterResponse {
+        return UserRegisterResponse(id: dto.id, email: dto.email)
+    }
+}
+
 class UserRegisterService {
     private let repository: UserRepository
 
@@ -16,8 +25,9 @@ class UserRegisterService {
         self.repository = repository
     }
 
-    func register(_ request: UserRegisterRequest) async -> Result<EquatableVoid, UserRegisterError>
-    {
+    func register(_ request: UserRegisterRequest) async -> Result<
+        UserRegisterResponse, UserRegisterError
+    > {
         guard let email = Email.create(email: request.email) else {
             return .failure(.emailError(.invalid))
         }
@@ -31,7 +41,7 @@ class UserRegisterService {
         switch userResult {
         case .success(let user):
             await repository.save(user: user)
-            return .success(EquatableVoid())
+            return .success(UserRegisterResponse.from(dto: user.toDto()))
         case .failure(let error):
             return .failure(error)
         }

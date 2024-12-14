@@ -11,6 +11,10 @@ struct Email: Hashable {
         self.email = email
     }
 
+    func toString() -> String {
+        return email
+    }
+
     static func create(email: String) -> Email? {
         if isValidEmail(email: email) {
             return Email(email: email)
