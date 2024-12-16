@@ -27,7 +27,7 @@ import Testing
 
     @Test("Finds a user by email")
     func findByEmail() async {
-        let email = Email.create(email: "test@example.com")!
+        let email = try! Email.create(email: "test@example.com").get()
         let user = createUserByEmail(email)
         let repository = InMemoryUserRepository()
 
@@ -40,7 +40,7 @@ import Testing
 
     @Test("Does not find a non-existing user by email")
     func doesNotFindByEmail() async {
-        let email = Email.create(email: "test@example.com")!
+        let email = try! Email.create(email: "test@example.com").get()
         let repository = InMemoryUserRepository()
         let result = await repository.find(by: email)
 
@@ -49,8 +49,8 @@ import Testing
 
     @Test("Finds all users")
     func findAll() async {
-        let aUser = createUserByEmail(Email.create(email: "test1@example.com")!)
-        let anotherUser = createUserByEmail(Email.create(email: "test2@example.com")!)
+        let aUser = createUserByEmail(try! Email.create(email: "test1@example.com").get())
+        let anotherUser = createUserByEmail(try! Email.create(email: "test2@example.com").get())
         let repository = InMemoryUserRepository()
 
         await repository.save(user: aUser)
@@ -90,7 +90,7 @@ import Testing
 
     @Test("Updates a user when it already exists")
     func updateUser() async {
-        let aUser = createUserByEmail(Email.create(email: "test1@example.com")!)
+        let aUser = createUserByEmail(try! Email.create(email: "test1@example.com").get())
         let anotherUser = aUser
         let repository = InMemoryUserRepository()
 
@@ -107,7 +107,7 @@ import Testing
 
 func createUserById(_ id: UserId) -> User {
     let password = try! Password.create(fromPlaintext: "SecurePass123_").get()
-    let email = Email.create(email: "test@example.com")!
+    let email = try! Email.create(email: "test@example.com").get()
     return User(id: id, email: email, password: password)
 }
 

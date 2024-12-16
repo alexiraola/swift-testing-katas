@@ -15,14 +15,7 @@ struct Email: Hashable {
         return email
     }
 
-    static func create(email: String) -> Email? {
-        if isValidEmail(email: email) {
-            return Email(email: email)
-        }
-        return nil
-    }
-
-    static func createResult(email: String) -> Result<Email, EmailError> {
+    static func create(email: String) -> Result<Email, EmailError> {
         if isValidEmail(email: email) {
             return .success(Email(email: email))
         }

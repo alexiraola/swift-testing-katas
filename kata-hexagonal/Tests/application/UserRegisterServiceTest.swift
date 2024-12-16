@@ -10,7 +10,7 @@ struct UserRegisterServiceTest {
         let service = UserRegisterService(repository: repository)
 
         let _ = await service.register(createRegisterRequest())
-        let expectedEmail = Email.create(email: createRegisterRequest().email)!
+        let expectedEmail = try! Email.create(email: createRegisterRequest().email).get()
         let result = await repository.find(by: expectedEmail)
 
         let foundUser = try! result.get()!

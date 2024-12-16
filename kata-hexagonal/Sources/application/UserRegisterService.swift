@@ -9,7 +9,7 @@ struct UserRegisterRequest {
     let password: String
 }
 
-struct UserRegisterResponse {
+struct UserRegisterResponse: Equatable {
     let id: String
     let email: String
 
@@ -28,11 +28,13 @@ class UserRegisterService {
     func register(_ request: UserRegisterRequest) async -> Result<
         UserRegisterResponse, UserRegisterError
     > {
-        guard let email = Email.create(email: request.email) else {
-            return .failure(.emailError(.invalid))
+        let email = Email.create(email: request.email)
+
+        if case let .failure(error) = email {
+            return .failure(.emailError(error))
         }
 
-        if await existsUser(email: email) {
+        if await existsUser(email: try! email.get()) {
             return .failure(.alreadyExists)
         }
 
@@ -51,7 +53,7 @@ class UserRegisterService {
         let password = Password.create(fromPlaintext: request.password).mapError {
             UserRegisterError.passwordError($0)
         }
-        let email = Email.createResult(email: request.email).mapError {
+        let email = Email.create(email: request.email).mapError {
             UserRegisterError.emailError($0)
         }
 

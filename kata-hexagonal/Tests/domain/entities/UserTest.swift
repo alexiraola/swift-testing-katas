@@ -29,7 +29,7 @@ import Testing
 func createUser(password: Password) -> User {
     return User(
         id: UserId.generateUniqueIdentifier(),
-        email: Email.create(email: "test@example.com")!,
+        email: try! Email.create(email: "test@example.com").get(),
         password: password
     )
 }

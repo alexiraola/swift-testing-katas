@@ -4,9 +4,9 @@ import Testing
 
 @Suite("Email") struct EmailTest {
     @Test("Creates an email for a given address in a correct format")
-    func testEmail() {
+    func testEmail() throws {
         let email = Email.create(email: "example@example.com")
-        #expect(email != nil)
+        _ = try email.get()
     }
 
     @Test(
@@ -14,7 +14,7 @@ import Testing
         arguments: ["invalid", "test@examplecom", "testexample.com"])
     func testInvalid(text: String) {
         let email = Email.create(email: text)
-        #expect(email == nil)
+        #expect(email == .failure(.invalid))
     }
 
     @Test("Considers two emails with the same address as equal")
