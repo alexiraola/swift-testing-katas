@@ -35,7 +35,7 @@ extension UserRegisterError: AbortError {
     }
 }
 
-struct UsersController: RouteCollection {
+struct UserRegisterController: RouteCollection {
     private let registerService = Factory.createUserRegisterService()
 
     func boot(routes: any RoutesBuilder) throws {

@@ -23,7 +23,8 @@ enum Entrypoint {
                 "It works!"
             }
 
-            try app.register(collection: UsersController())
+            try app.register(collection: UserRegisterController())
+            try app.register(collection: UserLoginController())
         } catch {
             app.logger.report(error: error)
             try? await app.asyncShutdown()
