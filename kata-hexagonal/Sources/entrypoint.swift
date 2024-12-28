@@ -26,6 +26,7 @@ enum Entrypoint {
 
             try app.register(collection: UserRegisterController())
             try app.register(collection: await UserLoginController())
+            try app.register(collection: await UserInfoController())
         } catch {
             app.logger.report(error: error)
             try? await app.asyncShutdown()
