@@ -8,4 +8,8 @@ actor Factory {
     static func createUserLoginService() -> UserLoginService {
         return UserLoginService(repository: userRepository)
     }
+
+    static func createTokenProvider() async -> TokenProvider {
+        return await JwtTokenProvider()
+    }
 }

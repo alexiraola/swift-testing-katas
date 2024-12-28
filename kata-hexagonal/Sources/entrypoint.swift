@@ -1,3 +1,4 @@
+import JWT
 import Logging
 import NIOCore
 import NIOPosix
@@ -24,7 +25,7 @@ enum Entrypoint {
             }
 
             try app.register(collection: UserRegisterController())
-            try app.register(collection: UserLoginController())
+            try app.register(collection: await UserLoginController())
         } catch {
             app.logger.report(error: error)
             try? await app.asyncShutdown()
